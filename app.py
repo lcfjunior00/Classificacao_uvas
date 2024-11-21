@@ -1,5 +1,5 @@
 import streamlit as st
-import gdown
+#import gdown
 import tensorflow as tf
 import io
 from PIL import Image
@@ -10,16 +10,19 @@ import requests
 
 def download_model(url, output_path):
     response = requests.get(url)
+    response.raise_for_status()  # Levanta exceções em caso de erro no download
     with open(output_path, 'wb') as f:
         f.write(response.content)
 
 @st.cache_resource
 def carrega_modelo():
-    #https://drive.google.com/file/d/1gZuGBQXzMlgeVoUszXxSb1H9Tg_6pRzt/view?usp=drive_link
     url = 'https://drive.google.com/uc?id=1gZuGBQXzMlgeVoUszXxSb1H9Tg_6pRzt'
-
-    gdown.download(url, 'modelo_quantizado16bits.tflite')
-    interpreter = tf.lite.Interpreter(model_path='modelo_quantizado16bits.tflite')
+    model_path = 'modelo_quantizado16bits.tflite'
+    
+    # Faz o download do modelo
+    download_model(url, model_path)
+    
+    interpreter = tf.lite.Interpreter(model_path=model_path)
     interpreter.allocate_tensors()
 
     return interpreter
