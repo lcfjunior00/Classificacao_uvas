@@ -8,6 +8,11 @@ import pandas as pd
 import plotly.express as px
 import requests
 
+def download_model(url, output_path):
+    response = requests.get(url)
+    with open(output_path, 'wb') as f:
+        f.write(response.content)
+
 @st.cache_resource
 def carrega_modelo():
     #https://drive.google.com/file/d/1gZuGBQXzMlgeVoUszXxSb1H9Tg_6pRzt/view?usp=drive_link
